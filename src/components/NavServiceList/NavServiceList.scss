@@ -1,0 +1,18 @@
+// TODO: Critical issue!
+// NEED TO REMOVE ASAP
+.line__service {
+  position: absolute;
+  &-horizontal {
+    border-top: 1px solid #4f4f4f;
+    width: 100%;
+    top: -25px;
+  }
+  &-vertical {
+    height: 418px;
+    width: 33.9%;
+    border-right: 1px solid #4f4f4f;
+    border-left: 1px solid #4f4f4f;
+    right: 33.3%;
+    top: -52px;
+  }
+}

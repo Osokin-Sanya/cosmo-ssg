@@ -1,0 +1,54 @@
+@charset "utf-8";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$black: #212121;
+$yellow: #ecd8bd;
+$white: #f7f7f7;
+$grey: #4f4f4f;
+
+@font-face {
+  font-family: "Merriweather";
+  src: url("../fonts/Merriweather-Regular.woff2");
+}
+@font-face {
+  font-family: "MiriamLibre";
+  src: url("../fonts/MiriamLibre-Regular.woff2");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: $black;
+  color: $white;
+
+  @apply font-base text-24 leading-normal;
+}
+
+// Gatsby root
+#___gatsby {
+  overflow-x: hidden;
+}
+
+li {
+  list-style: none;
+}
+
+.base-container {
+  min-height: 100vh;
+}
+
+.flip-y {
+  @media (min-width: 1280px) {
+    transform: rotateZ(180deg) rotateY(180deg);
+  }
+}
+.w-force-full {
+  width: 100vw;
+}

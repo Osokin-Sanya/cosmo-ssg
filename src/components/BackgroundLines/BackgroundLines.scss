@@ -1,0 +1,27 @@
+.line {
+  position: absolute;
+  background-color: #4f4f4f;
+  transform-origin: top;
+
+  $line-offset: 140px;
+
+  &-vertical {
+    width: 1px;
+    height: calc(100% + $line-offset * 2);
+    top: -$line-offset;
+  }
+
+  &-horizontal {
+    height: 1px;
+    width: calc(80% - 25px);
+    $h-offset: calc($line-offset / 2 * -1);
+    &-1 {
+      top: $h-offset;
+      left: 0;
+    }
+    &-2 {
+      bottom: $h-offset;
+      right: 0;
+    }
+  }
+}

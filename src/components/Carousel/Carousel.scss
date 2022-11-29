@@ -1,0 +1,28 @@
+/* purgecss start ignore */
+@charset "UTF-8";
+
+@import "slick-carousel/slick/slick.scss";
+
+.slick-slider {
+  z-index: 1;
+}
+
+.slick-track {
+  display: flex !important;
+}
+
+.slick-slide {
+  height: inherit !important;
+  > div {
+    height: 100%;
+  }
+}
+
+.arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+}
+/* purgecss end ignore */

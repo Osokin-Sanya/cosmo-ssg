@@ -1,0 +1,274 @@
+backend:
+  name: git-gateway
+  branch: main
+  commit_messages:
+    create: "Create {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
+    uploadMedia: "[skip ci] Upload “{{path}}”"
+    deleteMedia: "[skip ci] Delete “{{path}}”"
+
+media_folder: static/uploads
+public_folder: /uploads
+
+#local_backend:
+#  url: http://localhost:8082/api/v1 # when using a custom proxy server port
+#  allowed_hosts: ["192.168.0.1"] # when accessing the local site from a host other than 'localhost' or '127.0.0.1'
+
+publish_mode: editorial_workflow
+
+collections:
+  - name: "pages"
+    label: "Страницы"
+    files:
+      - file: "src/pages/index.md"
+        name: "index"
+        label: "Главная страница"
+        fields:
+          - {
+              label: "Template Key",
+              name: "templateKey",
+              widget: "hidden",
+              default: "index-page",
+              required: true,
+            }
+          - {
+              label: "Главный заголовок",
+              name: "mainTitle",
+              widget: string,
+              required: true,
+            }
+          - { label: Первая картинка, name: image, widget: image }
+
+      - file: src/pages/services.md
+        extension: md
+        name: services
+        label: Страница со всеми услугами
+        fields:
+          - {
+              label: "Template Key",
+              name: "templateKey",
+              widget: "hidden",
+              default: "services-page",
+            }
+          - label: "Список услуг"
+            name: "serviceList"
+            collapsed: false
+            widget: "list"
+            summary: " "
+            fields:
+              - {
+                  label: "Услуга",
+                  name: "service",
+                  widget: "relation",
+                  collection: "service",
+                  value_field: "{{serviceType}}***{{title}}***{{id}}",
+                  search_fields: ["title", "url"],
+                  display_fields: ["{{title}} [{{serviceType}}] ({{price}})"],
+                }
+
+  - name: "service"
+    label: "Услуги"
+    folder: "src/pages/service"
+    create: true
+    slug: "{{fields.url}}"
+    fields:
+      - {
+          label: "Template Key",
+          name: "templateKey",
+          widget: "hidden",
+          default: "service-page",
+          required: true,
+        }
+      - { label: ServiceId, name: id, widget: ncw-id, prefix: service }
+      - {
+          label: "Ссылка",
+          name: "url",
+          widget: "string",
+          required: true,
+          hint: "Данная ссылка будет использоваться в адресной строке, например *service/**pilling*** или *service/**face-cleaning***",
+          pattern:
+            [
+              "[\\w\\d-]{1,64}",
+              "Ссылка может состоять из символов латиницы (a-z) в маленьком регистре, цифр и `-`",
+            ],
+        }
+      - { label: "Название услуги", name: "title", widget: "string" }
+      - {
+          label: "Тип услуги",
+          name: "serviceType",
+          required: true,
+          widget: "select",
+          options:
+            [
+              { label: "Лицо", value: "face" },
+              { label: "Волосы", value: "hair" },
+              { label: "Тело", value: "body" },
+            ],
+        }
+      - { label: "Цена", name: "price", widget: "number" }
+      - {
+          label: "Главное изображение",
+          name: "image",
+          widget: "image",
+          default: "/uploads/default-image.jpeg",
+          required: true,
+          choose_url: false,
+        }
+      - {
+          label: "Дополнительное изображение",
+          name: "datailsImage",
+          widget: "image",
+          default: "/uploads/default-image.jpeg",
+          required: true,
+          choose_url: false,
+        }
+      - {
+          label: "Краткое описание услуги",
+          name: "shortDescription",
+          widget: "string",
+          required: false,
+          hint: "Используется как subtitle на странице со всеми услугами",
+        }
+      - {
+          label: Полное описание услуги,
+          name: description,
+          widget: markdown,
+          required: false,
+        }
+      - {
+          label: Детали услуги,
+          name: datails,
+          widget: object,
+          fields:
+            [
+              {
+                label: "Is Single",
+                name: "isSingle",
+                widget: "boolean",
+                default: true,
+              },
+              {
+                label: "Суб Услгуги",
+                name: "subServices",
+                widget: "list",
+                hint: "Если выбрано isSingle то данная вкладка не будет отображатся",
+                summary: "{{fields.title}} - {{fields.price}}",
+                fields:
+                  [
+                    { label: Название суб-услуги, name: title, widget: string },
+                    { label: Цена суб-услуги, name: price, widget: number },
+                  ],
+              },
+              {
+                label: "Вкладки",
+                name: "tabs",
+                widget: "list",
+                summary: "{{fields.title}}",
+                fields:
+                  [
+                    { label: Заголовок, name: title, widget: string },
+                    { label: Контент, name: content, widget: markdown },
+                  ],
+              },
+            ],
+        }
+
+  - name: product
+    label: "Товары"
+    folder: "src/pages/product"
+    create: true
+    slug: "{{fields.url}}"
+    fields:
+      - {
+          label: "Template Key",
+          name: "templateKey",
+          widget: "hidden",
+          default: "product-page",
+          required: true,
+        }
+      - { label: ProductId, name: id, widget: ncw-id, prefix: product }
+      - {
+          label: "Ссылка",
+          name: "url",
+          widget: "string",
+          required: true,
+          hint: "Данная ссылка будет использоваться в адресной строке, например *service/**pilling*** или *service/**face-cleaning***",
+          pattern:
+            [
+              "[\\w\\d-]{1,64}",
+              "Ссылка может состоять из символов латиницы (a-z) в маленьком регистре, цифр и `-`",
+            ],
+        }
+      - { label: "Название товара", name: "title", widget: "string" }
+      - {
+          label: "Дополнительное название товара",
+          name: "subTitle",
+          widget: "string",
+          required: false,
+        }
+      - {
+          label: "Производитель",
+          name: "manufacturer",
+          required: true,
+          widget: "select",
+          options: ["Christina", "Solanie", "Holy Land", "Je’demeure"],
+        }
+      - {
+          label: "Изображение",
+          name: "image",
+          widget: "image",
+          default: "/uploads/default-image.jpeg",
+          required: true,
+          choose_url: false,
+        }
+      - {
+          name: "prices",
+          label: "объем/цена",
+          widget: "list",
+          summary: "{{fields.volume}}ml - {{fields.price}}",
+          fields:
+            [
+              { label: "Объем", name: volume, widget: number },
+              { label: "Цена", name: price, widget: number },
+              {
+                label: "Старая цена",
+                name: oldPrice,
+                widget: number,
+                default: -1,
+                required: false,
+                hind: "Если цена меньше нуля то скидка отсутсвует",
+              },
+            ],
+        }
+      - {
+          label: Полное описание продукта,
+          name: description,
+          widget: markdown,
+          required: false,
+        }
+      - {
+          label: Детали продукта,
+          name: datails,
+          widget: object,
+          fields:
+            [
+              {
+                label: "Вкладки",
+                name: "tabs",
+                widget: "list",
+                summary: "{{fields.title}}",
+                fields:
+                  [
+                    { label: Заголовок, name: title, widget: string },
+                    { label: Контент, name: content, widget: markdown },
+                  ],
+              },
+              {
+                label: "Изображение",
+                name: "image",
+                widget: "image",
+                choose_url: false,
+              },
+            ],
+        }
